@@ -1,3 +1,8 @@
+## TOOD
+update readme
+
+come up with new name for bot (crowd source?)
+
 # easy-peasy-bot
 
 ## The story of a (Slack)bot
