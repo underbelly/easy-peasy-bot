@@ -94,19 +94,48 @@ controller.hears(['hello', 'hi', 'greetings'],
 });
 
 
+controller.hears(['help'],
+    ['direct_mention', 'mention', 'direct_message'],
+    function (bot, message) {
+        bot.reply(message, 'Need some help. DOCS coming soon');
+    });
+
+
+
+
+controller.hears(['play'],
+    ['direct_mention', 'mention', 'direct_message'],
+    function(bot, message){
+    bot.reply(message,"Coming soon...")
+});
+
+
+
+
+
 /**
  * AN example of what could be:
  * Any un-handled direct mention gets a reaction and a pat response!
  */
-//controller.on('direct_message,mention,direct_mention', function (bot, message) {
-//    bot.api.reactions.add({
-//        timestamp: message.ts,
-//        channel: message.channel,
-//        name: 'robot_face',
-//    }, function (err) {
-//        if (err) {
-//            console.log(err)
-//        }
-//        bot.reply(message, 'I heard you loud and clear boss.');
-//    });
-//});
+controller.on('direct_message,mention,direct_mention', function (bot, message) {
+   bot.api.reactions.add({
+       timestamp: message.ts,
+       channel: message.channel,
+       name: 'shrug',
+   }, function (err) {
+       if (err) {
+           console.log(err)
+       }
+       var currentUser;
+       bot.api.users.info({user:message.user},function(err,response) {
+           if(err) {
+               bot.reply("ERROR :(");
+           }
+           else {
+               currentUser = response["user"];
+               bot.reply(message, 'Sorry ' + currentUser["name"] + ' did you mumble? Idk what you want. Say `@devbotapp help` for instructions on how to speak clearly ');
+           }
+       });
+
+   });
+});
