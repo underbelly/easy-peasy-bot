@@ -84,13 +84,13 @@ controller.on('rtm_close', function (bot) {
 // BEGIN EDITING HERE!
 
 controller.on('bot_channel_join', function (bot, message) {
-    bot.reply(message, "I'm here!")
+    bot.reply(message, "I'm here, who is ready to party?")
 });
 
 controller.hears(['hello', 'hi', 'greetings'],
     ['direct_mention', 'mention', 'direct_message'],
     function (bot, message) {
-    bot.reply(message, 'Hello!');
+    bot.reply(message, 'Whats up beautiful!');
 });
 
 
