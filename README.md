@@ -1,3 +1,6 @@
+## TOOD
+update readme
+
 # easy-peasy-bot
 
 ## The story of a (Slack)bot
