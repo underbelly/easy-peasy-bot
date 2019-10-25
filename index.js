@@ -1,5 +1,7 @@
 require('dotenv').config()
 
+const Messages = require('./messages');
+// import * as Messages from './messages';
 /**
  * A Bot for Slack!
  */
@@ -33,6 +35,14 @@ if (process.env.MONGOLAB_URI) {
     var BotkitStorage = require('botkit-storage-mongo');
     config = {
         storage: BotkitStorage({mongoUri: process.env.MONGOLAB_URI}),
+    };
+} else if (process.env.REDIS_DB) {
+    redisConfig = {
+      methods: ['gary','other']
+    }
+    redisStorage = require('botkit-storage-redis')(redisConfig),
+    config = {
+        storage: redisStorage
     };
 } else {
     config = {
@@ -83,6 +93,7 @@ controller.on('rtm_close', function (bot) {
  */
 // BEGIN EDITING HERE!
 
+
 controller.on('bot_channel_join', function (bot, message) {
     bot.reply(message, "I'm here!")
 });
@@ -92,7 +103,105 @@ controller.hears('hello', ['direct_mention', 'mention', 'direct_message'], funct
 });
 
 controller.hears('hi', ['direct_mention', 'mention', 'direct_message'], function (bot, message) {
-    bot.reply(message, 'Yolo!');
+    bot.reply(message, 'Yolo!2');
+});
+
+controller.hears('add', ['direct_mention', 'mention', 'direct_message'], function (bot, message) {
+    bear = {id: 'cool', beans: ['cool', 'gray']}
+    controller.storage.teams.save(bear, error => console.log(error));
+    bot.reply(message, 'Saved a bear');
+});
+
+controller.hears('test', ['direct_mention', 'mention', 'direct_message'], function (bot, message) {
+    console.log('here');
+    bugger = controller.storage.teams.get('cool', error => console.log(error))
+    console.log(bugger);
+    console.log(controller.storage.teams)
+    console.log(controller.storage.teams.all(cb => null), {})
+    bot.reply(message, 'testing 1..2..3..');
+});
+
+controller.hears('play', ['direct_mention', 'mention', 'direct_message'], function (bot, message) {
+    console.log(Messages);
+    bot.reply(message, {attachments:[Messages.startGameMessage]});
+    bot.replyInteractive(message, 'huh?');
+});
+
+controller.on('block_actions', function(bot, message) {
+    console.log('action happened');
+    bot.reply(message, 'what?');
+})
+
+
+//  TESTING STUFF
+controller.hears('interactive', 'direct_message', function(bot, message) {
+
+    bot.reply(message, {
+        attachments:[
+            {
+                title: 'Do you want to interact with my buttons?',
+                callback_id: 'block_actions',
+                attachment_type: 'default',
+                actions: [
+                    {
+                        "name":"yes",
+                        "text": "Yes",
+                        "value": "yes",
+                        "type": "button",
+                    },
+                    {
+                        "name":"no",
+                        "text": "No",
+                        "value": "no",
+                        "type": "button",
+                    }
+                ]
+            }
+        ]
+    });
+});
+
+controller.on('block_actions', function(bot, message) {
+  console.log('in block actions')
+});
+
+controller.on('interactive_message_callback', function(bot, message) {
+
+    // check message.actions and message.callback_id to see what action to take...
+    console.log('in here');
+
+    bot.replyInteractive(message, {
+        text: '...',
+        attachments: [
+            {
+                title: 'My buttons',
+                callback_id: '123',
+                attachment_type: 'default',
+                actions: [
+                    {
+                        "name":"yes",
+                        "text": "Yes!",
+                        "value": "yes",
+                        "type": "button",
+                    },
+                    {
+                       "text": "No!",
+                        "name": "no",
+                        "value": "delete",
+                        "style": "danger",
+                        "type": "button",
+                        "confirm": {
+                          "title": "Are you sure?",
+                          "text": "This will do something!",
+                          "ok_text": "Yes",
+                          "dismiss_text": "No"
+                        }
+                    }
+                ]
+            }
+        ]
+    });
+
 });
 
 
