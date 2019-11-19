@@ -31,3 +31,6 @@ node_modules
 .env
 
 dump.rdb
+
+db_slack_bot_a
+db_slack_bot_ci
