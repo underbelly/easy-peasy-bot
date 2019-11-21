@@ -3,7 +3,8 @@ require("dotenv").config();
 var express = require("express");
 var bodyParser = require("body-parser");
 
-const StartGameMessage = require("./messages");
+const StartGameMessage = require("./StartGameMessage");
+const GameInProgressMessage = require("./GameInProgressMessage");
 /**
  * A Bot for Slack!
  */
@@ -110,16 +111,19 @@ controller.hears(
   }
 );
 
-
 // Variables
 let tempStore = [];
 let GameInitiated = false;
 
-controller.hears("reset", ["direct_mention", "mention", "direct_message"], function(bot, message) {
-  tempStore = [];
-  GameInitiated = false;
-  bot.reply(message, "$#%@ system error... Everything has been reset.");
-});
+controller.hears(
+  "reset",
+  ["direct_mention", "mention", "direct_message"],
+  function(bot, message) {
+    tempStore = [];
+    GameInitiated = false;
+    bot.reply(message, "$#%@ system error... Everything has been reset.");
+  }
+);
 
 controller.hears(
   "play",
@@ -129,7 +133,10 @@ controller.hears(
     // const username = payload.user.name;
 
     if (GameInitiated) {
-      bot.reply(message, "A game has already been started, click \"Join\" if you want to play");
+      bot.reply(
+        message,
+        'A game has already been started, click "Join" if you want to play'
+      );
     } else {
       GameInitiated = true;
       bot.reply(message, {
@@ -139,26 +146,41 @@ controller.hears(
   }
 );
 
+let foosGame = {
+  yf: {name: 'agro', score: 3},
+  yg: {name: 'john', score: 2},
+  bf: {name: 'jacob', score: 1},
+  bg: {name: 'jingle', score: 0},
+}
 
 controller.on("interactive_message_callback", function(bot, message) {
   // console.log("in here", message.callback_id, message.actions);
   const payload = JSON.parse(message.payload);
   const username = payload.user.name;
   const action = message.actions[0].value;
+  let updatedMessage = null;
 
-  if (action === 'add_user_to_game') {
-    tempStore.includes(username) || tempStore.length >= 4 ? null : tempStore.push(username);
-  } else if (action === 'remove_user_from_game') {
-    const index = tempStore.indexOf(username);
-    if (index !== -1) {
-      tempStore = tempStore.filter(i => i !== username);
-    }
+  switch (action) {
+    case "add_user_to_game":
+      tempStore.push(username);
+      // tempStore.includes(username) || tempStore.length >= 4 ? null : tempStore.push(username);
+      updatedMessage = StartGameMessage(tempStore);
+      break;
+    case "remove_user_from_game":
+      tempStore = tempStore.includes(username)
+        ? tempStore.filter(i => i !== username)
+        : tempStore;
+      updatedMessage = StartGameMessage(tempStore);
+      break;
+    case "start_game":
+      updatedMessage = GameInProgressMessage(foosGame);
+      break;
+    default:
+      updatedMessage = StartGameMessage(tempStore);
+      break;
   }
 
   bot.replyInteractive(message, {
-      attachments: [
-      StartGameMessage(tempStore)
-    ]
+    attachments: [updatedMessage]
   });
 });
-
