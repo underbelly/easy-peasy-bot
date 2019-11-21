@@ -1,4 +1,12 @@
 function StartGameMessage(players) {
+  const getStatus = () => {
+    const openSpots = 4 - players.length;
+    if (openSpots === 0) {
+      return `*Status:* Ready to begin`
+    } else {
+      return `*Status:* Looking for ${openSpots} more.`
+    }
+  }
   const getChallengers = () => {
     if (players.length === 0) {
       return "*Waiting for Challengers...*";
@@ -29,6 +37,16 @@ function StartGameMessage(players) {
           },
           style: "danger",
           value: "cancel game"
+        },
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            emoji: true,
+            text: "Leave"
+          },
+          style: "danger",
+          value: "remove_user_from_game"
         }
       ];
     } else {
@@ -75,7 +93,7 @@ function StartGameMessage(players) {
           },
           {
             type: "mrkdwn",
-            text: "*Status:* Waiting for 1 more"
+            text: getStatus()
           }
         ]
       },

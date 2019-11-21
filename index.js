@@ -14,6 +14,14 @@ const GameInProgressMessage = require("./GameInProgressMessage");
  * With custom integrations, we don't have a way to find out who installed us, so we can't message them :(
  */
 
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function onInstallation(bot, installer) {
   if (installer) {
     bot.startPrivateConversation({ user: installer }, function(err, convo) {
@@ -112,14 +120,18 @@ controller.hears(
 );
 
 // Variables
-let tempStore = [];
+let playersArray = [];
 let GameInitiated = false;
 
-controller.hears("reset", ["direct_mention", "mention", "direct_message"], function(bot, message) {
-  tempStore = [];
-  GameInitiated = false;
-  bot.reply(message, "$#%@ system error... Everything has been reset.");
-});
+controller.hears(
+  "reset",
+  ["direct_mention", "mention", "direct_message"],
+  function(bot, message) {
+    playersArray = [];
+    GameInitiated = false;
+    bot.reply(message, "$#%@ system error... Everything has been reset.");
+  }
+);
 
 controller.hears(
   "play",
@@ -143,14 +155,13 @@ controller.hears(
 );
 
 let foosGame = {
-  yf: {name: 'agro', score: 3},
-  yg: {name: 'john', score: 2},
-  bf: {name: 'jacob', score: 1},
-  bg: {name: 'jingle', score: 0},
-}
+  yf: { name: "", score: 0 },
+  yg: { name: "", score: 0 },
+  bf: { name: "", score: 0 },
+  bg: { name: "", score: 0 }
+};
 
 controller.on("interactive_message_callback", function(bot, message) {
-  // console.log("in here", message.callback_id, message.actions);
   const payload = JSON.parse(message.payload);
   const username = payload.user.name;
   const action = message.actions[0].value;
@@ -158,21 +169,56 @@ controller.on("interactive_message_callback", function(bot, message) {
 
   switch (action) {
     case "add_user_to_game":
-      tempStore.push(username);
-      // tempStore.includes(username) || tempStore.length >= 4 ? null : tempStore.push(username);
-      updatedMessage = StartGameMessage(tempStore);
+      playersArray.push(username + playersArray.length);
+      // playersArray.includes(username) || playersArray.length >= 4 ? null : playersArray.push(username);
+      updatedMessage = StartGameMessage(playersArray);
       break;
     case "remove_user_from_game":
-      tempStore = tempStore.includes(username)
-        ? tempStore.filter(i => i !== username)
-        : tempStore;
-      updatedMessage = StartGameMessage(tempStore);
+      playersArray = playersArray.includes(username)
+        ? playersArray.filter(i => i !== username)
+        : playersArray;
+      updatedMessage = StartGameMessage(playersArray);
       break;
     case "start_game":
+      shuffle(playersArray);
+      foosGame.yg.name = playersArray[0];
+      foosGame.yf.name = playersArray[1];
+      foosGame.bg.name = playersArray[2];
+      foosGame.bf.name = playersArray[3];
+      updatedMessage = GameInProgressMessage(foosGame);
+      bot.reply(message, {
+        attachments: [updatedMessage]
+      });
+      updatedMessage = {
+        blocks: [
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: "Game is underway"
+            }
+          }
+        ]
+      };
+      break;
+    case "increment_yg_score":
+      foosGame.yg.score += 1;
+      updatedMessage = GameInProgressMessage(foosGame);
+      break;
+    case "increment_yf_score":
+      foosGame.yf.score += 1;
+      updatedMessage = GameInProgressMessage(foosGame);
+      break;
+    case "increment_bg_score":
+      foosGame.bg.score += 1;
+      updatedMessage = GameInProgressMessage(foosGame);
+      break;
+    case "increment_bf_score":
+      foosGame.bf.score += 1;
       updatedMessage = GameInProgressMessage(foosGame);
       break;
     default:
-      updatedMessage = StartGameMessage(tempStore);
+      updatedMessage = StartGameMessage(playersArray);
       break;
   }
 

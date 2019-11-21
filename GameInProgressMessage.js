@@ -71,7 +71,7 @@ function GameInProgressMessage(game) {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: "Score: 7 - 5"
+          text: `Score: ${yellowTeamScore} - ${blackTeamScore}`
         },
         accessory: {
           type: "button",
