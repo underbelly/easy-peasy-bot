@@ -115,15 +115,11 @@ controller.hears(
 let tempStore = [];
 let GameInitiated = false;
 
-controller.hears(
-  "reset",
-  ["direct_mention", "mention", "direct_message"],
-  function(bot, message) {
-    tempStore = [];
-    GameInitiated = false;
-    bot.reply(message, "$#%@ system error... Everything has been reset.");
-  }
-);
+controller.hears("reset", ["direct_mention", "mention", "direct_message"], function(bot, message) {
+  tempStore = [];
+  GameInitiated = false;
+  bot.reply(message, "$#%@ system error... Everything has been reset.");
+});
 
 controller.hears(
   "play",

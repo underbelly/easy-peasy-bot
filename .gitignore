@@ -32,5 +32,6 @@ node_modules
 
 dump.rdb
 
-**/db_slack_bot_a
+db_slack_bot_a
 db_slack_bot_ci
+db_slack_bot_a/teams/T024JAEPN.json
