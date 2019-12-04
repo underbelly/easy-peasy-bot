@@ -103,14 +103,18 @@ controller.on("bot_channel_join", function(bot, message) {
   bot.reply(message, "I'm back from the dead!");
 });
 
+let test = 'first';
+
 controller.hears(
   "test",
   ["direct_mention", "mention", "direct_message"],
   function(bot, message) {
-    console.log("here");
-    bugger = controller.storage.teams.get("cool", error => console.log(error));
-    console.log(bugger);
-    console.log(controller.storage.teams);
+    console.log(test);
+    test = 'next';
+    // console.log("here");
+    // bugger = controller.storage.teams.get("cool", error => console.log(error));
+    // console.log(bugger);
+    // console.log(controller.storage.teams);
     console.log(
       controller.storage.teams.all(cb => null),
       {}
