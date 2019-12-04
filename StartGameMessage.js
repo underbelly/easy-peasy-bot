@@ -1,12 +1,30 @@
-function StartGameMessage(players) {
+function StartGameMessage(players, playersBlock) {
+  const getAddOptions = () => {
+    return {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "Add Players"
+      },
+      accessory: {
+        type: "multi_static_select",
+        placeholder: {
+          type: "plain_text",
+          text: "Add Players",
+          emoji: true
+        },
+        options: playersBlock
+      }
+    };
+  };
   const getStatus = () => {
     const openSpots = 4 - players.length;
     if (openSpots === 0) {
-      return `*Status:* Ready to begin`
+      return `*Status:* Ready to begin`;
     } else {
-      return `*Status:* Looking for ${openSpots} more.`
+      return `*Status:* Looking for ${openSpots} more.`;
     }
-  }
+  };
   const getChallengers = () => {
     if (players.length === 0) {
       return "*Waiting for Challengers...*";
@@ -36,7 +54,7 @@ function StartGameMessage(players) {
             text: "Cancel Game"
           },
           style: "danger",
-          value: "cancel game"
+          value: "cancel_game"
         },
         {
           type: "button",
@@ -71,7 +89,7 @@ function StartGameMessage(players) {
           style: "danger",
           value: "remove_user_from_game"
         }
-      ]
+      ];
     }
   };
 
@@ -97,6 +115,7 @@ function StartGameMessage(players) {
           }
         ]
       },
+      getAddOptions(),
       {
         type: "actions",
         elements: getButtons()

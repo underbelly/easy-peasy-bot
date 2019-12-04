@@ -1,6 +1,6 @@
-function GameInProgressMessage(game) {
-  const yellowTeamScore = game.yg.score + game.yf.score;
-  const blackTeamScore = game.bg.score + game.bf.score;
+function GameInProgressMessage(gameObj) {
+  const yellowTeamScore = gameObj.yg.score + gameObj.yf.score;
+  const blackTeamScore = gameObj.bg.score + gameObj.bf.score;
   
   return {
     blocks: [
@@ -8,7 +8,7 @@ function GameInProgressMessage(game) {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `*Yellow Team: ${yellowTeamScore}`
+          text: `*Yellow Team:* ${yellowTeamScore}`
         }
       },
       {
@@ -19,7 +19,7 @@ function GameInProgressMessage(game) {
             text: {
               type: "plain_text",
               emoji: true,
-              text: `G: ${game.yg.name} ${game.yg.score}`
+              text: `G: ${gameObj.yg.name} ${gameObj.yg.score}`
             },
             value: "increment_yg_score"
           },
@@ -28,7 +28,7 @@ function GameInProgressMessage(game) {
             text: {
               type: "plain_text",
               emoji: true,
-              text: `F: ${game.yf.name} ${game.yf.score}`
+              text: `F: ${gameObj.yf.name} ${gameObj.yf.score}`
             },
             value: "increment_yf_score"
           }
@@ -38,7 +38,7 @@ function GameInProgressMessage(game) {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `*Black Team: ${blackTeamScore}`
+          text: `*Black Team:* ${blackTeamScore}`
         }
       },
       {
@@ -49,7 +49,7 @@ function GameInProgressMessage(game) {
             text: {
               type: "plain_text",
               emoji: true,
-              text: `G: ${game.bg.name} ${game.bg.score}`
+              text: `G: ${gameObj.bg.name} ${gameObj.bg.score}`
             },
             value: "increment_bg_score"
           },
@@ -58,7 +58,7 @@ function GameInProgressMessage(game) {
             text: {
               type: "plain_text",
               emoji: true,
-              text: `F: ${game.bf.name} ${game.bf.score}`
+              text: `F: ${gameObj.bf.name} ${gameObj.bf.score}`
             },
             value: "increment_bf_score"
           }
@@ -81,7 +81,7 @@ function GameInProgressMessage(game) {
             emoji: true
           },
           style: "primary",
-          value: "complete game"
+          value: "complete_game"
         }
       }
     ]
