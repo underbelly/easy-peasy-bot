@@ -143,7 +143,7 @@ function initializeGame() {
 const syncSlackUsers = async () => {
   const response = await axios({
     method: 'get',
-    url: `https://slack.com/api/users.list?token=${SLACK_SYNC_TOKEN}&pretty=1`,
+    url: `https://slack.com/api/users.list?token=${process.env.SLACK_SYNC_TOKEN}&pretty=1`,
   }).then(response => response.data).catch((error) => console.log(error));
   response.members
     .filter(mem => {
