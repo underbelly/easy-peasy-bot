@@ -27,10 +27,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "botkit": "0.2.2",
-    "botkit-storage-mongo": "^1.0.2",
-    "botkit-storage-redis": "^1.1.0",
     "dotenv": "^8.0.0",
-    "mongodb": "^1.4.39",
     "node-cron": "^2.0.3",
     "redis": "^2.8.0"
   }
