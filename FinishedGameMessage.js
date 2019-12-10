@@ -1,4 +1,6 @@
 const axios = require('axios');
+const resyncPlayerStats = require("./ResyncPlayerStats");
+
 
 function FinishedGameMessage(gameObj) {
   const winningMessage = () => {
@@ -43,6 +45,8 @@ function FinishedGameMessage(gameObj) {
       }
       }
   }).then((response) => {
+    playerStats;
+    resyncPlayerStats(playerStats);
     console.log('done hitting api', response);
   }).catch((error) => {
     console.log('err', error);

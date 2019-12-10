@@ -1,4 +1,4 @@
-function StartGameMessage(players, playersBlock) {
+function StartGameMessage(players, playersBlock, playerStats) {
   const getAddOptions = () => {
     return {
       type: "section",
@@ -29,8 +29,16 @@ function StartGameMessage(players, playersBlock) {
     if (players.length === 0) {
       return "*Waiting for Challengers...*";
     }
-    let playerstring = players.join("\n• ");
-    return `*Challengers:*\n• ${playerstring}`;
+    // const formattedPlayers = players.map(player => {
+    //   const stats = playerStats[player];
+    //   return `#${stats.rank || '?'} *${player}*  F: ${stats.gpg_f || '?'} G: ${stats.gpg_g || '?'} • win% ${(stats.wins/stats.games*100).toFixed(1)}`;
+    // })
+    const formattedPlayers = players.map(player => {
+      const stats = playerStats[player];
+      return `#${stats.rank || '?'} *${player}*  avg: ${(stats.gpg || 0).toFixed(2) || '?'} goals`;
+    })
+    let playerstring = formattedPlayers.join("\n");
+    return `*Challengers:*\n ${playerstring}`;
   };
 
   const getButtons = () => {

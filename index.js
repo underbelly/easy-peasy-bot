@@ -5,6 +5,8 @@ var axios = require("axios");
 const StartGameMessage = require("./StartGameMessage");
 const GameInProgressMessage = require("./GameInProgressMessage");
 const FinishedGameMessage = require("./FinishedGameMessage");
+
+const resyncPlayerStats = require("./ResyncPlayerStats");
 /**
  * A Bot for Slack!
  */
@@ -19,7 +21,34 @@ function shuffle(a) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
   }
-  return a;
+  return fixRandomizer(a);
+}
+
+// This swaps position if a player has played a position over 75% of the time
+function fixRandomizer(a) {
+  // order yg yf bg bf
+  const p1stats = playerStats[a[0]];
+  const p2stats = playerStats[a[1]];
+  const p3stats = playerStats[a[2]];
+  const p4stats = playerStats[a[3]];
+  const p1PositionOccurance = p1stats.games !== 0 ? p1stats.games_goalie / p1stats.games : .5;
+  const p2PositionOccurance = p2stats.games !== 0 ? p2stats.games_forward / p2stats.games : .5;
+  const p3PositionOccurance = p3stats.games !== 0 ? p3stats.games_goalie / p3stats.games : .5;
+  const p4PositionOccurance = p4stats.games !== 0 ? p4stats.games_forward / p4stats.games : .5;
+  const switchTeam1 = (p1PositionOccurance > .75) || (p2PositionOccurance > .75);
+  const switchTeam2 = (p3PositionOccurance > .75) || (p4PositionOccurance > .75);
+  if (switchTeam1) {
+    console.log('switching yellow team');
+    const temp = a[0];
+    a[0] = a[1];
+    a[1] = temp;
+  }
+  if (switchTeam2) {
+    console.log('switching black team');
+    const temp = a[2];
+    a[2] = a[3];
+    a[3] = temp;
+  }
 }
 
 function onInstallation(bot, installer) {
@@ -103,25 +132,7 @@ controller.on("bot_channel_join", function(bot, message) {
   bot.reply(message, "I'm back from the dead!");
 });
 
-let test = 'first';
 
-controller.hears(
-  "test",
-  ["direct_mention", "mention", "direct_message"],
-  function(bot, message) {
-    console.log(test);
-    test = 'next';
-    // console.log("here");
-    // bugger = controller.storage.teams.get("cool", error => console.log(error));
-    // console.log(bugger);
-    // console.log(controller.storage.teams);
-    console.log(
-      controller.storage.teams.all(cb => null),
-      {}
-    );
-    bot.reply(message, "testing 1..2..3..");
-  }
-);
 
 // Variables
 let playersArray = [];
@@ -129,6 +140,7 @@ let GameInitiated = false;
 let foosGame = initializeGame();
 let slackUsers = {};
 let playersBlock = [];
+const playerStats = {};
 
 function initializeGame() {
   return {
@@ -139,6 +151,14 @@ function initializeGame() {
   };
 }
 
+controller.hears(
+  "test",
+  ["direct_mention", "mention", "direct_message"],
+  function(bot, message) {
+    console.log(playerStats);
+    bot.reply(message, "testing 1..2..3..");
+  }
+);
 
 const syncSlackUsers = async () => {
   const response = await axios({
@@ -176,6 +196,7 @@ controller.hears(
 );
 
 syncSlackUsers();
+resyncPlayerStats(playerStats);
 
 controller.hears(
   "add",
@@ -190,7 +211,7 @@ controller.hears(
     });
 
     bot.reply(message, {
-      attachments: [StartGameMessage(playersArray, playersBlock)]
+      attachments: [StartGameMessage(playersArray, playersBlock, playerStats)]
     });
   }
 );
@@ -199,9 +220,6 @@ controller.hears(
   "play",
   ["direct_mention", "mention", "direct_message"],
   function(bot, message) {
-    // console.log(message);
-    // const username = payload.user.name;
-
     if (GameInitiated) {
       bot.reply(
         message,
@@ -212,7 +230,7 @@ controller.hears(
       userInitiatingGame = slackUsers[message.user]
       playersArray.push(userInitiatingGame)
       bot.reply(message, {
-        attachments: [StartGameMessage(playersArray, playersBlock)]
+        attachments: [StartGameMessage(playersArray, playersBlock, playerStats)]
       });
     }
   }
@@ -228,7 +246,7 @@ controller.on("interactive_message_callback", function(bot, message) {
     case "add_user_to_game":
       // playersArray.push(username + playersArray.length);
       playersArray.includes(username) || playersArray.length >= 4 ? null : playersArray.push(username);
-      updatedMessage = StartGameMessage(playersArray, playersBlock);
+      updatedMessage = StartGameMessage(playersArray, playersBlock, playerStats);
       break;
     case "multi_static_select":
       newPlayersArray = payload.actions[0].selected_options
@@ -236,13 +254,13 @@ controller.on("interactive_message_callback", function(bot, message) {
         playerName = player.text.text;
         playersArray.includes(playerName) || playersArray.length >= 4 ? null : playersArray.push(playerName);
       })
-      updatedMessage = StartGameMessage(playersArray, playersBlock);
+      updatedMessage = StartGameMessage(playersArray, playersBlock, playerStats);
       break;
     case "remove_user_from_game":
       playersArray = playersArray.includes(username)
         ? playersArray.filter(i => i !== username)
         : playersArray;
-      updatedMessage = StartGameMessage(playersArray, playersBlock);
+      updatedMessage = StartGameMessage(playersArray, playersBlock, playerStats);
       break;
     case "cancel_game":
       playersArray = [];
@@ -304,7 +322,7 @@ controller.on("interactive_message_callback", function(bot, message) {
       GameInitiated = false;
       break;
     default:
-      updatedMessage = StartGameMessage(playersArray, playersBlock);
+      updatedMessage = StartGameMessage(playersArray, playersBlock, playerStats);
       break;
   }
 
