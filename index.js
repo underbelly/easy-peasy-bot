@@ -155,7 +155,7 @@ controller.hears(
   "test",
   ["direct_mention", "mention", "direct_message"],
   function(bot, message) {
-    console.log(playerStats);
+    console.log('updated');
     bot.reply(message, "testing 1..2..3..");
   }
 );
@@ -316,7 +316,7 @@ controller.on("interactive_message_callback", function(bot, message) {
       updatedMessage = GameInProgressMessage(foosGame);
       break;
     case "complete_game":
-      updatedMessage = FinishedGameMessage(foosGame);
+      updatedMessage = FinishedGameMessage(foosGame, playerStats);
       foosGame = initializeGame();
       playersArray = [];
       GameInitiated = false;

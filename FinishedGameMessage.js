@@ -2,7 +2,7 @@ const axios = require('axios');
 const resyncPlayerStats = require("./ResyncPlayerStats");
 
 
-function FinishedGameMessage(gameObj) {
+function FinishedGameMessage(gameObj, playerStats) {
   const winningMessage = () => {
     const yellowTeamScore = gameObj.yg.score + gameObj.yf.score;
     const blackTeamScore = gameObj.bg.score + gameObj.bf.score;
