@@ -31,12 +31,12 @@ function fixRandomizer(a) {
   const p2stats = playerStats[a[1]];
   const p3stats = playerStats[a[2]];
   const p4stats = playerStats[a[3]];
-  const p1PositionOccurance = p1stats.games !== 0 ? p1stats.games_goalie / p1stats.games : .5;
-  const p2PositionOccurance = p2stats.games !== 0 ? p2stats.games_forward / p2stats.games : .5;
-  const p3PositionOccurance = p3stats.games !== 0 ? p3stats.games_goalie / p3stats.games : .5;
-  const p4PositionOccurance = p4stats.games !== 0 ? p4stats.games_forward / p4stats.games : .5;
-  const switchTeam1 = (p1PositionOccurance > .75) || (p2PositionOccurance > .75);
-  const switchTeam2 = (p3PositionOccurance > .75) || (p4PositionOccurance > .75);
+  const p1PositionOccurance = p1stats.weekly.games !== 0 ? p1stats.weekly.games_goalie / p1stats.weekly.games : .5;
+  const p2PositionOccurance = p2stats.weekly.games !== 0 ? p2stats.weekly.games_forward / p2stats.weekly.games : .5;
+  const p3PositionOccurance = p3stats.weekly.games !== 0 ? p3stats.weekly.games_goalie / p3stats.weekly.games : .5;
+  const p4PositionOccurance = p4stats.weekly.games !== 0 ? p4stats.weekly.games_forward / p4stats.weekly.games : .5;
+  const switchTeam1 = (p1PositionOccurance > .70) || (p2PositionOccurance > .70);
+  const switchTeam2 = (p3PositionOccurance > .70) || (p4PositionOccurance > .70);
   if (switchTeam1) {
     console.log('switching yellow team');
     const temp = a[0];
@@ -155,8 +155,8 @@ controller.hears(
   "test",
   ["direct_mention", "mention", "direct_message"],
   function(bot, message) {
-    console.log('updated');
-    bot.reply(message, "testing 1..2..3..");
+    console.log('test', playerStats['craig'].weekly.games);
+    bot.reply(message, "testing 1..2..3..4");
   }
 );
 
@@ -191,6 +191,7 @@ controller.hears(
   function(bot, message) {
     playersArray = [];
     GameInitiated = false;
+    foosGame = initializeGame();
     bot.reply(message, "$#%@ system error... Everything has been reset.");
   }
 );
