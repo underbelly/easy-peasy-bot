@@ -8,9 +8,19 @@ function FinishedGameMessage(gameObj, playerStats) {
     const blackTeamScore = gameObj.bg.score + gameObj.bf.score;
 
     if (yellowTeamScore > blackTeamScore) {
-      return `${gameObj.yg.name} and ${gameObj.yf.name} beat ${gameObj.bg.name} and ${gameObj.bf.name} ${yellowTeamScore} to ${blackTeamScore}.`
+      return `*Winners* ${yellowTeamScore}pts\n` +
+             `F: ${gameObj.yf.name} - ${gameObj.yf.score}\n` +
+             `G: ${gameObj.yg.name} - ${gameObj.yg.score}\n` +
+             `*Losers* ${blackTeamScore}pts\n` +
+             `F: ${gameObj.bf.name} - ${gameObj.bf.score}\n` +
+             `G: ${gameObj.bg.name} - ${gameObj.bg.score}.`;
     } else if(blackTeamScore > yellowTeamScore) {
-      return `${gameObj.bg.name} and ${gameObj.bf.name} beat ${gameObj.yg.name} and ${gameObj.yf.name} ${blackTeamScore} to ${yellowTeamScore}.`
+      return `*Winners* ${blackTeamScore}pts\n` +
+             `F: ${gameObj.bf.name} - ${gameObj.bf.score}\n` +
+             `G: ${gameObj.bg.name} - ${gameObj.bg.score}\n` +
+             `*Losers* ${yellowTeamScore}pts\n` +
+             `F: ${gameObj.yf.name} - ${gameObj.yf.score}\n` +
+             `G: ${gameObj.yg.name} - ${gameObj.yg.score}`;
     }
     return 'I guess it was a tie :man-shrugging:';
   }

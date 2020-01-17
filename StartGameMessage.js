@@ -2,11 +2,13 @@ function StartGameMessage(players, playersBlock, playerStats) {
   const getAddOptions = () => {
     return {
       type: "section",
+      block_id: "add_players_multi_select",
       text: {
         type: "mrkdwn",
         text: "Add Players"
       },
       accessory: {
+        action_id: "multi_add_players",
         type: "multi_static_select",
         placeholder: {
           type: "plain_text",

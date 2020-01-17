@@ -16,6 +16,18 @@ const resyncPlayerStats = require("./ResyncPlayerStats");
  * With custom integrations, we don't have a way to find out who installed us, so we can't message them :(
  */
 
+const fixTeams = async (players) => {
+  const formattedPlayers = players.join(',');
+  const getPositionsUrl = `https://us-central1-tablechamp-444aa.cloudfunctions.net/getPositions?users=${formattedPlayers}`;
+  const response = await axios.get(getPositionsUrl).then(response => response.data);
+  return {
+    yf: { name: response.t1.forward, score: 0 },
+    yg: { name: response.t1.goalie, score: 0 },
+    bf: { name: response.t2.forward, score: 0 },
+    bg: { name: response.t2.goalie, score: 0 }
+  };
+}
+
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -237,7 +249,7 @@ controller.hears(
   }
 );
 
-controller.on("interactive_message_callback", function(bot, message) {
+controller.on("interactive_message_callback", async function(bot, message) {
   const payload = JSON.parse(message.payload);
   const username = payload.user.name;
   const action = message.actions[0].value || 'multi_static_select';
@@ -245,7 +257,6 @@ controller.on("interactive_message_callback", function(bot, message) {
 
   switch (action) {
     case "add_user_to_game":
-      // playersArray.push(username + playersArray.length);
       playersArray.includes(username) || playersArray.length >= 4 ? null : playersArray.push(username);
       updatedMessage = StartGameMessage(playersArray, playersBlock, playerStats);
       break;
@@ -279,11 +290,7 @@ controller.on("interactive_message_callback", function(bot, message) {
       };
       break;
     case "start_game":
-      shuffle(playersArray);
-      foosGame.yg.name = playersArray[0];
-      foosGame.yf.name = playersArray[1];
-      foosGame.bg.name = playersArray[2];
-      foosGame.bf.name = playersArray[3];
+      foosGame = await fixTeams(playersArray);
       updatedMessage = GameInProgressMessage(foosGame);
       bot.reply(message, {
         attachments: [updatedMessage]
