@@ -1,17 +1,17 @@
-var axios = require("axios");
+import axios from "axios";
 
-function ResyncPlayerStats(playerStats) {
-  const response = axios({
+function ResyncPlayerStats(playerStats: any) {
+  axios({
     method: "get",
     url: `https://us-central1-tablechamp-444aa.cloudfunctions.net/stats`
   })
-    .then(response => {
+    .then((response: any) => {
       playerStats
-      response.data.forEach(userStats => {
+      response.data.forEach((userStats: any) => {
         playerStats[userStats.user] = userStats.stats;
       });
     })
-    .catch(error => console.log(error));
+    .catch((error: any) => console.log(error));
   return playerStats;
 }
 
