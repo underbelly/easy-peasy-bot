@@ -4,7 +4,7 @@
   "description": "A papio killer.",
   "main": "/build/index.js",
   "scripts": {
-    "tsc": "tsc",
+    "build": "tsc",
     "start": "node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,7 +30,7 @@
     "botkit": "0.2.2",
     "botkit-storage-mongo": "^1.0.7",
     "dotenv": "^8.2.0",
-    "node-cron": "^2.0.3",
+    "node-cron": "^2.0.3"
   },
   "devDependencies": {
     "@types/node": "^13.7.1",
