@@ -84,7 +84,8 @@ jobs:
     - name: Get Latest Task Definition from AWS
       id: get-task-definition
       run: |
-        aws ecs describe-task-definition --task-definition gamerbot | jq -r '.taskDefinition' > task-definition.json
+        aws ecs describe-task-definition --task-definition gamerbot | jq -r '.taskDefinition | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities)' > task-definition.json
+
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
