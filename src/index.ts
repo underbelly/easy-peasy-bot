@@ -231,6 +231,10 @@ controller.hears(
   }
 );
 
+controller.webserver.get('/status', (req: any, res: any) => {
+  return res.status(200).send('OK!')
+})
+
 controller.on("interactive_message_callback", async function (bot: any, message: any) {
   const payload = JSON.parse(message.payload);
   const username = payload.user.name;
