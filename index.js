@@ -145,6 +145,9 @@ controller.on("bot_channel_join", function(bot, message) {
 });
 
 
+controller.webserver.get('/status', (req, res) => {
+  return res.status(200).send('OK!')
+})
 
 // Variables
 let playersArray = [];
