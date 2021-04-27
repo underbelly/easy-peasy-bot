@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/DEGoodmanWilson/easy-peasy-bot-app#readme",
   "engines": {
-    "node": "10.x"
+    "node": "^16.0.0"
   },
   "dependencies": {
     "@slack/bolt": "^3.3.0",
@@ -31,6 +31,7 @@
     "botkit": "0.2.2",
     "botkit-storage-mongo": "^1.0.7",
     "dotenv": "^8.2.0",
+    "node": "^16.0.0",
     "node-cron": "^2.0.3",
     "typescript": "^4.2.4"
   },
