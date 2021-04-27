@@ -89,43 +89,38 @@ app.event("channel_join", async ({ event, client }) => {
   console.log("channel join");
 });
 
-app.message("test", async ({ message, say }) => {
-  await say(`testing 1,2,3`);
-});
-
-app.message("stats", async ({ message, say }) => {
-  await say(`https://underbelly-foos.netlify.com/`);
-});
-
-app.message("reset", async ({ message, say }) => {
-  playersArray = [];
-  GameInitiated = false;
-  foosGameObj = { ...EMPTY_FOOS_GAME };
-  await say("$#%@ system error... Everything has been reset.");
-});
-
-app.message("sync", async ({ message, say }) => {
-  reSyncSlackUsers();
-  await say("resyncing slack users");
-});
-
-app.message("play", async ({ message, say }) => {
-  if (GameInitiated) {
-    await say(
-      'A game has already been started, click "Join" if you want to play'
-    );
-  } else {
-    GameInitiated = true;
-    // @ts-ignore
-    const userInitiatingGame = slackUsers[message.user];
-    playersArray.push(userInitiatingGame);
-    const newMessage = StartGameMessage(
-      playersArray,
-      playersBlock,
-      playerStats
-    );
-    // @ts-ignore
-    await say(newMessage);
+app.event('app_mention', async ({ event, context, client, say }) => {
+  const message = event.text;
+  if(message.includes('play')) {
+    if (GameInitiated) {
+      await say(
+        'A game has already been started, click "Join" if you want to play'
+      );
+    } else {
+      GameInitiated = true;
+      // @ts-ignore
+      const userInitiatingGame = slackUsers[message.user];
+      playersArray.push(userInitiatingGame);
+      const newMessage = StartGameMessage(
+        playersArray,
+        playersBlock,
+        playerStats
+      );
+      // @ts-ignore
+      await say(newMessage);
+    }
+  } else if (message.includes('sync')) {
+    reSyncSlackUsers();
+    await say("resyncing slack users");
+  } else if (message.includes('reset')) {
+    playersArray = [];
+    GameInitiated = false;
+    foosGameObj = { ...EMPTY_FOOS_GAME };
+    await say("$#%@ system error... Everything has been reset.");
+  } else if (message.includes('stats')){
+    await say(`https://underbelly-foos.netlify.com/`);
+  } else if (message.includes('test')) {
+    await say(`testing 1,2,3`);
   }
 });
 
@@ -202,6 +197,7 @@ app.action("cancel_game", async ({ ack, respond, body }) => {
       },
     ],
   };
+  GameInitiated = false;
   await respond(updatedMessage);
   await ack();
 });
