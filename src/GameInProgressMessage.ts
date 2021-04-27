@@ -30,6 +30,7 @@ type footerButtonType = {
   }
   "style": buttonStyleType,
   "value": string,
+  "action_id": string,
 }
 
 
@@ -49,6 +50,7 @@ function GameInProgressMessage(gameObj: GameObjType) {
       },
       style: buttonStyle,
       value: actionCode,
+      action_id: actionCode,
     }
   }
 
@@ -85,7 +87,8 @@ function GameInProgressMessage(gameObj: GameObjType) {
               emoji: true,
               text: `G: ${yellowGoalie.name} ${yellowGoalie.scoreForward + yellowGoalie.scoreGoal}`
             },
-            value: "increment_yg_score"
+            value: "increment_yg_score",
+            action_id: "increment_yg_score"
           },
           {
             type: "button",
@@ -94,7 +97,8 @@ function GameInProgressMessage(gameObj: GameObjType) {
               emoji: true,
               text: `F: ${yellowForward.name} ${yellowForward.scoreForward + yellowForward.scoreGoal}`
             },
-            value: "increment_yf_score"
+            value: "increment_yf_score",
+            action_id: "increment_yf_score"
           }
         ]
       },
@@ -115,7 +119,8 @@ function GameInProgressMessage(gameObj: GameObjType) {
               emoji: true,
               text: `G: ${blackGoalie.name} ${blackGoalie.scoreForward + blackGoalie.scoreGoal}`
             },
-            value: "increment_bg_score"
+            value: "increment_bg_score",
+            action_id: "increment_bg_score"
           },
           {
             type: "button",
@@ -124,7 +129,8 @@ function GameInProgressMessage(gameObj: GameObjType) {
               emoji: true,
               text: `F: ${blackForward.name} ${blackForward.scoreForward + blackForward.scoreGoal}`
             },
-            value: "increment_bf_score"
+            value: "increment_bf_score",
+            action_id: "increment_bf_score"
           }
         ]
       },

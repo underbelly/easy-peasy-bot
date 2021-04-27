@@ -38,7 +38,7 @@ export function StartGameMessage(players: Array<string>, playersBlock: Array<str
     // })
     const formattedPlayers = players.map(player => {
       const stats = playerStats[player];
-      return `#${stats.rank || '?'} *${player}*  avg: ${(stats.gpg || 0).toFixed(2) || '?'} goals`;
+      return `#${stats?.rank || '?'} *${player}*  avg: ${(stats?.gpg || 0).toFixed(2) || '?'} goals`;
     })
     let playerstring = formattedPlayers.join("\n");
     return `*Challengers:*\n ${playerstring}`;
@@ -55,7 +55,8 @@ export function StartGameMessage(players: Array<string>, playersBlock: Array<str
             text: "Start Standard Game"
           },
           style: "primary",
-          value: "start_game_standard"
+          value: "start_game_standard",
+          action_id: "start_game_standard"
         },
         {
           type: "button",
@@ -65,7 +66,8 @@ export function StartGameMessage(players: Array<string>, playersBlock: Array<str
             text: "Start Swippy Swappy"
           },
           style: "primary",
-          value: "start_game_swippy"
+          value: "start_game_swippy",
+          action_id: "start_game_swippy"
         },
         {
           type: "button",
@@ -75,7 +77,8 @@ export function StartGameMessage(players: Array<string>, playersBlock: Array<str
             text: "Cancel Game"
           },
           style: "danger",
-          value: "cancel_game"
+          value: "cancel_game",
+          action_id: "cancel_game"
         },
         {
           type: "button",
@@ -85,7 +88,8 @@ export function StartGameMessage(players: Array<string>, playersBlock: Array<str
             text: "Leave"
           },
           style: "danger",
-          value: "remove_user_from_game"
+          value: "remove_user_from_game",
+          action_id: "remove_user_from_game"
         }
       ];
     } else {
@@ -98,7 +102,8 @@ export function StartGameMessage(players: Array<string>, playersBlock: Array<str
             text: "Join"
           },
           style: "primary",
-          value: "add_user_to_game"
+          value: "add_user_to_game",
+          action_id: "add_user_to_game",
         },
         {
           type: "button",
@@ -108,7 +113,8 @@ export function StartGameMessage(players: Array<string>, playersBlock: Array<str
             text: "Leave"
           },
           style: "danger",
-          value: "remove_user_from_game"
+          value: "remove_user_from_game",
+          action_id: "remove_user_from_game"
         }
       ];
     }
