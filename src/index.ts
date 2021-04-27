@@ -99,7 +99,7 @@ app.event('app_mention', async ({ event, context, client, say }) => {
     } else {
       GameInitiated = true;
       // @ts-ignore
-      const userInitiatingGame = slackUsers[message.user];
+      const userInitiatingGame = slackUsers[event.user];
       playersArray.push(userInitiatingGame);
       const newMessage = StartGameMessage(
         playersArray,
