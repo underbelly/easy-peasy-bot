@@ -133,17 +133,7 @@ app.action("add_user_to_game", async ({ ack, respond, say, body }) => {
     : playersArray.push(username);
   if (playersArray.length === 4) {
     // @ts-ignore
-    await say({
-      blocks: [
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: "Game is ready :foos:",
-          },
-        },
-      ],
-    });
+    await say("Game is ready :foos:");
   }
   updatedMessage = StartGameMessage(playersArray, playersBlock, playerStats);
   await respond(updatedMessage);
