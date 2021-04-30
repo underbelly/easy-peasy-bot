@@ -9,17 +9,17 @@ function FinishedGameMessage(gameObj: GameObjType, playerStats: any) {
       const yellowTeamScore = gameObj.yellow.score;
       const blackTeamScore = gameObj.black.score;
       if (yellowTeamScore > blackTeamScore) {
-        return `*Winners* ${yellowTeamScore}pts\n` +
+        return `*Yellow Wins!* ${yellowTeamScore}pts\n` +
           `F: ${yellowForward.name} - ${yellowForward.scoreForward}\n` +
           `G: ${yellowGoalie.name} - ${yellowGoalie.scoreGoal}\n` +
-          `*Losers* ${blackTeamScore}pts\n` +
+          `*Black Lost* ${blackTeamScore}pts\n` +
           `F: ${blackForward.name} - ${blackForward.scoreForward}\n` +
           `G: ${blackGoalie.name} - ${blackGoalie.scoreGoal}`;
       } else if (blackTeamScore > yellowTeamScore) {
-        return `*Winners* ${blackTeamScore}pts\n` +
+        return `*Black Wins!* ${blackTeamScore}pts\n` +
           `F: ${blackForward.name} - ${blackForward.scoreForward}\n` +
           `G: ${blackGoalie.name} - ${blackGoalie.scoreGoal}\n` +
-          `*Losers* ${yellowTeamScore}pts\n` +
+          `*Yellow Lost* ${yellowTeamScore}pts\n` +
           `F: ${yellowForward.name} - ${yellowForward.scoreForward}\n` +
           `G: ${yellowGoalie.name} - ${yellowGoalie.scoreGoal}`;
       }

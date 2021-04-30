@@ -111,6 +111,7 @@ app.event('app_mention', async ({ event, context, client, say }) => {
     }
   } else if (message.includes('sync')) {
     reSyncSlackUsers();
+    resyncPlayerStats(playerStats);
     await say("resyncing slack users");
   } else if (message.includes('reset')) {
     playersArray = [];
@@ -285,10 +286,10 @@ app.action("increment_bf_score", async ({ ack, respond, body, say }) => {
 app.action("complete_game", async ({ ack, respond, body, say }) => {
   let updatedMessage = null;
   updatedMessage = FinishedGameMessage(foosGameObj, playerStats);
+  await respond(updatedMessage);
   foosGameObj = { ...EMPTY_FOOS_GAME };
   playersArray = [];
   GameInitiated = false;
-  await respond(updatedMessage);
   await ack();
 });
 
@@ -370,6 +371,11 @@ app.action("complete_revenge_swip", async ({ ack, respond, body, say }) => {
   updatedMessage = scoreBoardMessage;
   await respond(updatedMessage);
 });
+
+app.message('test123', async ({ message, say }) => {
+  const gameObj = JSON.stringify(foosGameObj)
+  await say(gameObj);
+})
 
 // Variables
 let playersArray: Array<string> = [];
