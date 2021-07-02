@@ -198,7 +198,7 @@ app.action("start_game_standard", async ({ ack, respond, body, say }) => {
   foosGameObj = await initializeGame("normal", playersArray, false);
   updatedMessage = GameInProgressMessage(foosGameObj);
   await respond(updatedMessage);
-  await say("Game is underway");
+  await say("Game on!");
   await ack();
 });
 
@@ -207,7 +207,7 @@ app.action("start_game_swippy", async ({ ack, respond, body, say }) => {
   foosGameObj = await initializeGame("swipswap", playersArray, false);
   updatedMessage = GameInProgressMessage(foosGameObj);
   await respond(updatedMessage);
-  await say("Game is underway");
+  await say("Game on!");
   await ack();
 });
 
@@ -374,6 +374,7 @@ app.action("complete_revenge_swip", async ({ ack, respond, body, say }) => {
 
 app.message('test123', async ({ message, say }) => {
   const gameObj = JSON.stringify(foosGameObj)
+  // JSON.stringify(playerStats)
   await say(gameObj);
 })
 
@@ -381,7 +382,7 @@ app.message('test123', async ({ message, say }) => {
 let playersArray: Array<string> = [];
 let GameInitiated = false;
 // let foosGame = initializeGame();
-const playerStats = {};
+let playerStats = {};
 let playersBlock: Array<string> = [];
 let slackUsers: SlackUsersType = {};
 
